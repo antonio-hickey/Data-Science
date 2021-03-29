@@ -6,6 +6,8 @@ from urllib.request import urlopen as uReq
 import pandas as pd
 import pathlib
 import datetime
+import json
+import re
 import csv
 #------------------------------------
 # Data Mining                       #
@@ -33,12 +35,17 @@ urls = [
 url = "https://www.espn.com/nfl/team/stats/_/name/atl"
 uClient = uReq(url) # Requesting target url
 page_soup = soup(uClient.read(), "html.parser") # Reading html data of target site
+json_data = page_soup.find_all('script', {'type':'text/javascript'})
+test_j = json.loads(json_data)
+print(test_j)
+
 uClient.close() # Close Soup
-title = page_soup.title.text
+
+
 #------------------------------------
 # Output Data to csv                #
 #------------------------------------
-PATH = pathlib.Path(__file__).parent
-with open(PATH.joinpath('data.csv'), 'a') as f:
-    writer = csv.writer(f)
-    writer.writerow(title)
+#PATH = pathlib.Path(__file__).parent
+#with open(PATH.joinpath('data.csv'), 'a') as f:
+#    writer = csv.writer(f)
+#    writer.writerow(title)
