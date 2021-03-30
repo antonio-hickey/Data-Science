@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from collections import Iterable
 import csv
 import time
 import datetime as dt
@@ -27,141 +28,174 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 #------------------------------------------
 
 # Get UFC Schedule
-driver.get('https://www.espn.com/mma/schedule/_/league/ufc')
+driver.get('http://www.ufcstats.com/statistics/events/upcoming')
 
-# Select next fight link
-next_fight = driver.find_element_by_css_selector("div.Schedule__EventLeague:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > table:nth-child(1) > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(4) > a:nth-child(1)")
+# Click next event
+next_fight = driver.find_element_by_css_selector("tr.b-statistics__table-row:nth-child(2) > td:nth-child(1) > i:nth-child(1) > a:nth-child(1)")
 next_fight.click()
 
-# Wait 3 seconds after link clicked
+# Wait 3 seconds
 time.sleep(3)
 
-# Get number of fights
-n_mainCard = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div/div[4]/div[3]/div/div[1]/div[2]/section/div/div/div")
+#
+table = driver.find_elements_by_xpath("/html/body/section/div/div/table/tbody/tr")
 
-# Fight 1 (f1 = fighter 1 | f2 = fighter 2)
+for nth in range(1,(len(table)+1)):
+    f1 = driver.find_element_by_css_selector("body > section > div > div > table > tbody > tr:nth-child({}) > td:nth-child(2) > p:nth-child(1) > a".format(nth))
+    f1.click()
+    f1_name = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-highlight").text
+    f1_xp = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-record").text[8:]
+    f1_height = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(1)").text[8:]
+    f1_weight = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(2)").text[8:11]
+    f1_reach = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(3)").text[7:9]
+    f1_stance = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(4)").text[8:]
+    f1_age = (int(dt.date.today().year) - int(driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(5)").text[-4:]))
+    f1_SLpM = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(1)").text[6:]
+    f1_strAcc = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(2)").text[11:]
+    f1_SApM = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(3)").text[6:]
+    f1_strDef = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(4)").text[10:]
+    f1_tdAvg = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(2)").text[9:]
+    f1_tdAcc = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(3)").text[9:]
+    f1_tdDef = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(4)").text[9:]
+    f1_subAvg = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(5)").text[11:]
 
-f1_name = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__header.pointer > div.MMAFightCard__Gamestrip.br-5.mh4.relative.MMAFightCard__Gamestrip--open > div > div > div.MMACompetitor.relative.flex.flex-uniform.pr6.flex-row-reverse.MMACompetitor--desktop > div > div.MMACompetitor__Detail.flex.flex-column.justify-center > h2 > span").text 
-f1_xp = driver.find_element_by_css_selector(".MMAFightCard__Gamestrip--open > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)").text
-f1_height = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(1) > div:nth-child(1) > div > div").text
-f1_weight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(2) > div:nth-child(1) > div > div").text
-f1_reach = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(3) > div:nth-child(1) > div > div").text
-f1_stance = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(4) > div:nth-child(1) > div > div").text
-f1_sig_str_lpm = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(5) > div:nth-child(1) > div > div").text
-f1_sig_str_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(6) > div:nth-child(1) > div > div").text
-f1_td_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(7) > div:nth-child(1) > div > div").text
-f1_td_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(8) > div:nth-child(1) > div > div").text
-f1_sub_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(9) > div:nth-child(1) > div > div").text
-
-f2_name = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__header.pointer > div.MMAFightCard__Gamestrip.br-5.mh4.relative.MMAFightCard__Gamestrip--open > div > div > div.MMACompetitor.relative.flex.flex-uniform.pl6.MMACompetitor--desktop > div > div.MMACompetitor__Detail.flex.flex-column.justify-center > h2 > span").text
-f2_xp = driver.find_element_by_css_selector(".MMAFightCard__Gamestrip--open > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)").text
-f2_height = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(1) > div.MMAMatchup__Basis.tar > div > div").text
-f2_weight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(2) > div.MMAMatchup__Basis.tar > div > div").text
-f2_reach = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(3) > div.MMAMatchup__Basis.tar > div > div").text
-f2_stance = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(4) > div.MMAMatchup__Basis.tar > div > div").text
-f2_sig_str_lpm = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(5) > div.MMAMatchup__Basis.tar > div > div").text
-f2_sig_str_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(6) > div.MMAMatchup__Basis.tar > div > div").text
-f2_td_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(7) > div.MMAMatchup__Basis.tar > div > div").text
-f2_td_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(8) > div.MMAMatchup__Basis.tar > div > div").text
-f2_sub_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(9) > div.MMAMatchup__Basis.tar > div > div").text
-
-# Log Data
-fight_1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
-
-
-# Close Div after data collected
-click_fight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child(1) > div.AccordionPanel__header.pointer")
-click_fight.click()
-
-
-# For loop for each fight
-for j in range(2,len(n_mainCard)+1):
-    time.sleep(1)
-    # Show div 
-    click_fight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__header.pointer".format(j))
-    click_fight.click()
-
-    time.sleep(2)
-
-    # Targeting data for nth fight (Where: f1 = fighter 1 | f2 = fighter 2)
-    
-    f1_name = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__header.pointer > div.MMAFightCard__Gamestrip.br-5.mh4.relative.MMAFightCard__Gamestrip--open > div > div > div.MMACompetitor.relative.flex.flex-uniform.pr6.flex-row-reverse.MMACompetitor--desktop > div > div.MMACompetitor__Detail.flex.flex-column.justify-center > h2 > span".format(j)).text 
-    f1_xp =  driver.find_element_by_css_selector(".MMAFightCard__Gamestrip--open > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)").text
-    f1_height = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(1) > div:nth-child(1) > div > div".format(j)).text
-    f1_weight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(2) > div:nth-child(1) > div > div".format(j)).text
-    f1_reach = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(3) > div:nth-child(1) > div > div".format(j)).text
-    f1_stance = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(4) > div:nth-child(1) > div > div".format(j)).text
-    f1_sig_str_lpm = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(5) > div:nth-child(1) > div > div".format(j)).text
-    f1_sig_str_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(6) > div:nth-child(1) > div > div".format(j)).text
-    f1_td_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(7) > div:nth-child(1) > div > div".format(j)).text
-    f1_td_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(8) > div:nth-child(1) > div > div".format(j)).text
-    f1_sub_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(9) > div:nth-child(1) > div > div".format(j)).text
-    
-    f2_name = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__header.pointer > div.MMAFightCard__Gamestrip.br-5.mh4.relative.MMAFightCard__Gamestrip--open > div > div > div.MMACompetitor.relative.flex.flex-uniform.pl6.MMACompetitor--desktop > div > div.MMACompetitor__Detail.flex.flex-column.justify-center > h2 > span".format(j)).text
-    f2_xp = driver.find_element_by_css_selector(".MMAFightCard__Gamestrip--open > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)").text
-    f2_height = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(1) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_weight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(1) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_reach = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(3) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_stance = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(4) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_sig_str_lpm = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(5) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_sig_str_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(6) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_td_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(7) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_td_acc = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(8) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    f2_sub_avg = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__body > div > div > div > div.ResponsiveWrapper > div > div.flex.pb4 > div.MMAFightCenter__Matchup > div > ul > li:nth-child(9) > div.MMAMatchup__Basis.tar > div > div".format(j)).text
-    
     # Store data
-    if j == 2:
-        fight_2 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
-    if j == 3:
-        fight_3 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
-    if j == 4:
-        fight_4 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
-    if j == 5:
-        fight_5 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
-    if j == 6:
-        fight_6 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_sig_str_lpm,f1_sig_str_acc,f1_sub_avg, f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_sig_str_lpm,f2_sig_str_acc,f2_sub_avg]
+    if nth == 1:
+        fight_1_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_1_f2 = []
+    if nth == 2:
+        fight_2_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_2_f2 = []
+    if nth == 3:
+        fight_3_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_3_f2 = []
+    if nth == 4:
+        fight_4_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_4_f2 = []
+    if nth == 5:
+        fight_5_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_5_f2 = []
+    if nth == 6:
+        fight_6_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_6_f2 = []
+    if nth == 7:
+        fight_7_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_7_f2 = []
+    if nth == 8:
+        fight_8_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_8_f2 = []
+    if nth == 9:
+        fight_9_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_9_f2 = []
+    if nth == 10:
+        fight_10_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_10_f2 = []
+    if nth == 11:
+        fight_11_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_11_f2 = []
+    if nth == 12:
+        fight_12_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_12_f2 = []
+    if nth == 13:
+        fight_13_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_13_f2 = []
+    if nth == 14:
+        fight_14_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_14_f2 = []
+    if nth == 15:
+        fight_15_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg]
+        fight_15_f2 = []
 
-    # Collapse div when done so the bot doesnt have to scroll
-    click_fight = driver.find_element_by_css_selector("#fittPageContainer > div:nth-child(4) > div > div.PageLayout__Main > div:nth-child(2) > section > div > div > div:nth-child({}) > div.AccordionPanel__header.pointer".format(j))
-    click_fight.click()
+    # Go Back to fighter's page
+    driver.back()
 
-    time.sleep(1)
+    # Fighter 2
+    f2 = driver.find_element_by_css_selector("body > section > div > div > table > tbody > tr:nth-child({}) > td:nth-child(2) > p:nth-child(2) > a".format(nth))
+    f2.click()
+    f2_name = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-highlight").text
+    f2_xp = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-record").text[8:]
+    f2_height = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(1)").text[8:]
+    f2_weight = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(2)").text[8:11]
+    f2_reach = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(3)").text[7:9]
+    f2_stance = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(4)").text[8:]
+    f2_age = (int(dt.date.today().year) - int(driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(5)").text[-4:]))
+    f2_SLpM = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(1)").text[6:]
+    f2_strAcc = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(2)").text[11:]
+    f2_SApM = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(3)").text[6:]
+    f2_strDef = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-left > ul > li:nth-child(4)").text[10:]
+    f2_tdAvg = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(2)").text[9:]
+    f2_tdAcc = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(3)").text[9:]
+    f2_tdDef = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(4)").text[9:]
+    f2_subAvg = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(5)").text[11:]
+    
+    # Append data to dataset
+    if nth == 1:
+        fight_1_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 2:
+        fight_2_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 3:
+        fight_3_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 4:
+        fight_4_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 5:
+        fight_5_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 6:
+        fight_6_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 7:
+        fight_7_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 8:
+        fight_8_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 9:
+        fight_9_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 10:
+        fight_10_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 11:
+        fight_11_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 12:
+        fight_12_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 13:
+        fight_13_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 14:
+        fight_14_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    if nth == 15:
+        fight_15_f2 = [f2_name,f2_xp,f2_height,f2_weight,f2_reach,f2_stance,f2_age,f2_SLpM,f2_strAcc,f2_SApM,f2_strDef,f2_tdAvg,f2_tdAcc,f2_tdDef,f2_subAvg]
+    
+    # Go Back to fighter's page
+    driver.back()
 
-#------------------------------------------
-# Fetching age data
-#------------------------------------------
-fighters = [fight_1[0],fight_1[9],fight_2[0],fight_2[9],fight_3[0],fight_3[9],fight_4[0],fight_4[9],fight_5[0],fight_5[9],fight_6[0],fight_6[9]]
-for fighter in fighters:
-    print(fighter)
-    driver.get("https://www.tapology.com/search?term=")
-    unclick_event = driver.find_element_by_css_selector("#content > form > fieldset > ul > li:nth-child(3) > label > input[type=checkbox]")
-    unclick_event.click()
-    unclick_promo = driver.find_element_by_css_selector("#content > form > fieldset > ul > li:nth-child(4) > label > input[type=checkbox]")
-    unclick_promo.click()
-    unclick_gyms = driver.find_element_by_css_selector("#content > form > fieldset > ul > li:nth-child(5) > label > input[type=checkbox]")
-    unclick_gyms.click()
-    unclick_users = driver.find_element_by_css_selector("#content > form > fieldset > ul > li:nth-child(6) > label > input[type=checkbox]")
-    unclick_users.click()
-    search_box = driver.find_element_by_css_selector("#searchField")
-    search_box.send_keys(fighter)
-    search_btn = driver.find_element_by_css_selector("#search")
-    search_btn.click()
-
-    time.sleep(5)
-    f = driver.find_element_by_css_selector("#content > div.searchResultsFighter > table > tbody > tr:nth-child(2) > td:nth-child(1) > a")
-    f.click()
-    age = driver.find_element_by_css_selector("#stats > ul > li:nth-child(5) > span:nth-child(2)").text
-    print(age)
 #------------------------------------------
 # Output data to csv
 #------------------------------------------
+def flatten(lis):
+     for item in lis:
+         if isinstance(item, Iterable) and not isinstance(item, str):
+             for x in flatten(item):
+                 yield x
+         else:        
+             yield item
 
 # Output filename
 filename = "next_fight.csv"
 
 # Data structuring
-columns = ["f1 name", "f1 xp","f1 height", "f1 weight", "f1 reach", "f1 stance", "f1 sig str lpm", "f1 sig str acc", "f1 sub avg","f2 name","f2 xp", "f2 height", "f2 weight", "f2 reach", "f2 stance", "f2 sig str lpm", "f2 sig str acc", "f2 sub avg"]
-rows = [fight_1,fight_2,fight_3,fight_4,fight_5,fight_6]
+columns = ["f1 name", "f1 xp","f1 height", "f1 weight", "f1 reach", "f1 stance", "f1 age", "f1 sig str lpm", "f1 sig str acc", "f1 sig str abs","f1 sig str def", "f1 td avg", "f1 td acc", "f1 td def", "f1 sub avg",
+           "f2 name", "f2 xp","f2 height", "f2 weight", "f2 reach", "f2 stance", "f2 age", "f2 sig str lpm", "f2 sig str acc", "f2 sig str abs","f2 sig str def", "f2 td avg", "f2 td acc", "f2 td def", "f2 sub avg",]
+fight_1 = list(flatten(fight_1_f1 + fight_1_f2))
+fight_2 = list(flatten(fight_2_f1 + fight_2_f2))
+fight_3 = list(flatten(fight_3_f1 + fight_3_f2))
+fight_4 = list(flatten(fight_4_f1 + fight_4_f2))
+fight_5 = list(flatten(fight_5_f1 + fight_5_f2))
+fight_6 = list(flatten(fight_6_f1 + fight_6_f2))
+fight_7 = list(flatten(fight_7_f1 + fight_7_f2))
+fight_8 = list(flatten(fight_8_f1 + fight_8_f2))
+fight_9 = list(flatten(fight_9_f1 + fight_9_f2))
+fight_10 = list(flatten(fight_10_f1 + fight_10_f2))
+fight_11 = list(flatten(fight_11_f1 + fight_11_f2))
+fight_12 = list(flatten(fight_12_f1 + fight_12_f2))
+fight_13 = list(flatten(fight_13_f1 + fight_13_f2))
+fight_14 = list(flatten(fight_14_f1 + fight_14_f2))
+fight_15 = list(flatten(fight_15_f1 + fight_15_f2))
+rows = [fight_1,fight_2,fight_3,fight_4,fight_5,fight_6,fight_7,fight_8,fight_9,fight_10,fight_11,fight_12,fight_13,fight_14,fight_15]
 
 # Rendering csv dataset
 with open(filename, 'w') as csvfile:
