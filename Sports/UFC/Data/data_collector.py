@@ -45,6 +45,8 @@ for nth in range(1,(len(table)+1)):
     f1.click()
     f1_name = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-highlight").text
     f1_xp = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-record").text[8:]
+    if " (" in f1_xp:
+    	f1_xp = f1_xp.replace(' (1 NC)','')
     f1_height = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(1)").text[8:]
     f1_weight = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(2)").text[8:11]
     f1_reach = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(3)").text[7:9]
@@ -114,6 +116,8 @@ for nth in range(1,(len(table)+1)):
     f2.click()
     f2_name = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-highlight").text
     f2_xp = driver.find_element_by_css_selector("body > section > div > h2 > span.b-content__title-record").text[8:]
+    if " (" in f2_xp:
+    	f2_xp = f2_xp.replace(' (1 NC)','')
     f2_height = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(1)").text[8:]
     f2_weight = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(2)").text[8:11]
     f2_reach = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_small-width.js-guide > ul > li:nth-child(3)").text[7:9]
@@ -166,6 +170,8 @@ for nth in range(1,(len(table)+1)):
 #------------------------------------------
 # Output data to csv
 #------------------------------------------
+
+# Flatten list to 1 dimensional
 def flatten(lis):
      for item in lis:
          if isinstance(item, Iterable) and not isinstance(item, str):
