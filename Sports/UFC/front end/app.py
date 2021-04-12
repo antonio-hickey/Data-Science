@@ -7,10 +7,6 @@ CORS(app)
 
 data = pd.read_csv("../back end/Projections.csv")
 print(data.columns[0])
-
-@app.route('/hello')
-def say_hello_world():
-    return {'result': "Fuck off"}
     
 @app.route('/heading1')
 def heading1():
