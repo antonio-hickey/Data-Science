@@ -105,6 +105,8 @@ for x in range(len(df)):
                                 draws2 = record2[-1:]
                             elif n_draws2 == -2: 
                                 draws2 = record2[-2:]
+                        elif n_loses2 == 2:
+                            loses2 = (record2[4:5])
                     #-----------------------------------------
                     return wins1,wins2,loses1,loses2
                     #---------------------------------------------------------------
@@ -205,86 +207,115 @@ for x in range(len(df)):
                 exp_diff = n_fights1 - n_fights2 # Exprience Difference (total fights - total fights)
                 if exp_diff > 0:
                     f1_points.append(1)
+                    print('xp point: f1')
                 if exp_diff < 0:
                     f2_points.append(1)
-                win_rate1 = int((exp(f1[1],f2[1]))[0]) / n_fights1 * 100 #  Win Rate
+                    print('xp point: f2')
+
+                #  Win Rate
+                win_rate1 = int((exp(f1[1],f2[1]))[0]) / n_fights1 * 100
                 win_rate2 = int((exp(f1[1],f2[1]))[1]) / n_fights2 * 100
                 if win_rate1 > win_rate2:
                     f1_points.append(1)
+                    print('win % point: f1')
                 if win_rate1 < win_rate2:
                     f2_points.append(1)
+                    print('win % point: f2')
 
                 # Height
                 if height(height1,height2) > 0:
                     f1_points.append(1)
+                    print('height point: f1')
                 if height(height1,height2) < 0:
-                    f2_points.append(1)   
+                    f2_points.append(1)
+                    print('height point: f2')   
 
                 # Weight
                 if weight(weight1,weight2) >= 15:
                     f1_points.append(1)
+                    print('weight point: f1')
                 if weight(weight1,weight2) <= -15:
                     f2_points.append(1)
+                    print('weight point: f1')
 
                 # Reach
                 if reach(reach1,reach2) > 0:
                     f1_points.append(1)
+                    print('reach point: f1')
                 if reach(reach1,reach2) < 0:
                     f2_points.append(1)
+                    print('reach point: f2')
                 
                 # Age 
                 if age(age1,age2) > 3:
                     f2_points.append(1)
+                    print('age point: f1')
                 if age(age1,age2) < -3:
                     f1_points.append(1)
+                    print('age point: f2')
                 
                 # significant strikes landed per min
                 if  sig_str_lpm(sig_str_lpm1,sig_str_lpm2) > 0:
                     f1_points.append(1)
+                    print('sig str lpm point: f1')
                 if sig_str_lpm(sig_str_lpm1,sig_str_lpm2) < 0:
                     f2_points.append(1)
+                    print('sig str lpm point: f2')
 
                 # significant strikes accuracy
                 if sig_str_acc(sig_str_acc1,sig_str_acc2) > 0:
                     f1_points.append(1)
+                    print('sig str acc point: f1')
                 if sig_str_acc(sig_str_acc1,sig_str_acc2) < 0:
                     f2_points.append(1)
+                    print('sig str acc point: f2')
 
                 # significant stikes absorbed
                 if sig_str_abs(sig_str_abs1,sig_str_abs2) > 0:
                     f1_points.append(1)
+                    print('sig str abs point: f1')
                 if sig_str_abs(sig_str_abs1,sig_str_abs2) < 0:
                     f2_points.append(1)
+                    print('sig str abs point: f2')
                 
                 # significant stikes defended
                 if sig_str_def(sig_str_def1,sig_str_def2) > 0:
                     f1_points.append(1)
+                    print('sig str def point: f1')
                 if sig_str_def(sig_str_def1,sig_str_def2) < 0:
                     f2_points.append(1)
-                
+                    print('sig str def point: f2')
+
                 # Takedown Average
                 if td_avg(td_avg1,td_avg2) > 0:
                     f1_points.append(1)
+                    print('td avg point: f1')
                 if td_avg(td_avg1,td_avg2) < 0:
                     f2_points.append(1)
+                    print('td avg point: f2')
 
                 # Takedown Accouracy
                 if td_acc(td_acc1,td_acc2) > 0:
                     f1_points.append(1)
+                    print('td acc point: f1')
                 if td_acc(td_acc1,td_acc2) < 0:
                     f2_points.append(1)
-                
+                    print('td acc point: f2')
                 # Takedown Defence
                 if td_def(td_def1,td_def2) > 0:
                     f1_points.append(1)
+                    print('td def point: f1')
                 if td_def(td_def1,td_def2) < 0:
                     f2_points.append(1)
+                    print('td def point: f2')
 
                 # Sumbission Average
                 if sub_avg(sub_avg1,sub_avg2) > 0:
                     f1_points.append(1)
+                    print('sub avg point: f1')
                 if sub_avg(sub_avg1,sub_avg2) < 0:
                     f2_points.append(1)
+                    print('sub avg point: f2')
                     
                 # Odds
                 def Odds(f1,f2):
@@ -301,6 +332,8 @@ for x in range(len(df)):
                 fight_n = []
                 winners = []
                 odds = []
+                print(sum(f1_points),':',sum(f2_points))
+                print('\n',x+1)
                 if sum(f1_points) > sum(f2_points):
                     winners.append(f1[0])
                     fight_n.append(x + 1)
@@ -316,10 +349,7 @@ for x in range(len(df)):
                 for xth in range(len(fight_n)):
                 	rows.append([fight_n[xth],winners[xth],odds[xth]])
                 return rows
-#---------------------------------------------------------------
-    rows.append(model(f1[1],f1[2],f1[3],f1[4],f1[5],f1[6],f1[7],f1[8],f1[9],f1[10],f1[11],f1[12],f1[13],f1[14],
-          f2[1],f2[2],f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10],f2[11],f2[12],f2[13],f2[14]))
-    #---------------------------------------------------------------
+    rows.append(model(f1[1],f1[2],f1[3],f1[4],f1[5],f1[6],f1[7],f1[8],f1[9],f1[10],f1[11],f1[12],f1[13],f1[14],f2[1],f2[2],f2[3],f2[4],f2[5],f2[6],f2[7],f2[8],f2[9],f2[10],f2[11],f2[12],f2[13],f2[14]))
 #---------------------------------------------------------------
 # Turn 3d list to 2d list
 def method(_row_):
