@@ -345,7 +345,7 @@ for x in range(len(df)):
                 elif sum(f1_points) == sum(f2_points):
                     fight_n.append(x + 1)
                     winners.append("N/A")
-                    odds.append("50% / 50%")
+                    odds.append("N/A")
                 for xth in range(len(fight_n)):
                 	rows.append([fight_n[xth],winners[xth],odds[xth]])
                 return rows
@@ -360,7 +360,7 @@ for x in rows:
     rows_.append(method(x))
 print(rows_)
 filename = "Projections.csv"
-columns = ["Fight #", "Projected Winner", "Odds"]    
+columns = ["Fight #", "Projected Winner", "Confidence Interval"]    
 with open(filename,'w') as csvfile:
     csvwriter = csv.writer(csvfile,delimiter=',')
     csvwriter.writerow(columns)

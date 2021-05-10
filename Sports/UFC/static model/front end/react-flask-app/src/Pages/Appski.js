@@ -38,7 +38,7 @@ function App() {
   	});
   }, []);
 
-  const [f1c3, setf1c3] = useState('to close to call');
+  const [f1c3, setf1c3] = useState('N/A');
   useEffect(() => {
   	fetch('/f1c3').then(res => res.json()).then(data2 => {
   	  setf1c3(data2.f1c3);
@@ -57,7 +57,7 @@ function App() {
   	  setf2c2(data2.f2c2);
   	});
   }, []);
-  const [f2c3, setf2c3] = useState('to close to call');
+  const [f2c3, setf2c3] = useState('N/A');
   useEffect(() => {
   	fetch('/f2c3').then(res => res.json()).then(data2 => {
   	  setf2c3(data2.f2c3);
@@ -78,7 +78,7 @@ function App() {
   	});
   }, []);
 
-  const [f3c3, setf3c3] = useState('to close to call');
+  const [f3c3, setf3c3] = useState('N/A');
   useEffect(() => {
   	fetch('/f3c3').then(res => res.json()).then(data2 => {
   	  setf3c3(data2.f3c3);
@@ -98,7 +98,7 @@ function App() {
   	});
   }, []);
 
-  const [f4c3, setf4c3] = useState('to close to call');
+  const [f4c3, setf4c3] = useState('N/A');
   useEffect(() => {
   	fetch('/f4c3').then(res => res.json()).then(data2 => {
   	  setf4c3(data2.f4c3);
@@ -119,7 +119,7 @@ function App() {
   	});
   }, []);
 
-  const [f5c3, setf5c3] = useState('to close to call');
+  const [f5c3, setf5c3] = useState('N/A');
   useEffect(() => {
   	fetch('/f5c3').then(res => res.json()).then(data2 => {
   	  setf5c3(data2.f5c3);
@@ -141,7 +141,7 @@ function App() {
 		        </thead>
 		        <tbody>
 		        	<tr>
-                		<td>{f1c1}</td>
+                <td>{f1c1}</td>
 		        		<td>{f1c2}</td>
 		        		<td>{f1c3}</td>
 		        	</tr>
