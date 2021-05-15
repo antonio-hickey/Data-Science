@@ -29,6 +29,9 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 # Data targeting
 #------------------------------------------
 
+# Timestamp
+tStamp = dt.datetime.now().strftime('%m-%d-%Y')
+
 # Completed Events
 driver.get('http://www.ufcstats.com/statistics/events/completed')
 
@@ -68,33 +71,33 @@ for nth in range(1,(len(table)+1)):
     f1_subAvg = driver.find_element_by_css_selector("body > section > div > div > div.b-list__info-box.b-list__info-box_style_middle-width.js-guide.clearfix > div.b-list__info-box-left.clearfix > div.b-list__info-box-right.b-list__info-box_style-margin-right > ul > li:nth-child(5)").text[11:]
 
     if nth == 1:
-        fight_1_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_1_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 2:
-        fight_2_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_2_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 3:
-        fight_3_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_3_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 4:
-        fight_4_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_4_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 5:
-        fight_5_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_5_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 6:
-        fight_6_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_6_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 7:
-        fight_7_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_7_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 8:
-        fight_8_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_8_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 9:
-        fight_9_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_9_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 10:
-        fight_10_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_10_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 11:
-        fight_11_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_11_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 12:
-        fight_12_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_12_f1 = [tStampf1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 13:
-        fight_13_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_13_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 14:
-        fight_14_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
+        fight_14_f1 = [tStamp,f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
     if nth == 15:
         fight_15_f1 = [f1_name,f1_xp,f1_height,f1_weight,f1_reach,f1_stance,f1_age,f1_SLpM,f1_strAcc,f1_SApM,f1_strDef,f1_tdAvg,f1_tdAcc,f1_tdDef,f1_subAvg,1]
 
